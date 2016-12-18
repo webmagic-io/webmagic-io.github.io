@@ -59,6 +59,8 @@ public class GithubRepoPageProcessor implements PageProcessor {
 </dependency>
 ```
 
+或者下载最新版：
+
 ## 文档：
 
 * 中文: [http://webmagic.io/docs/zh/](http://webmagic.io/docs/zh/)
