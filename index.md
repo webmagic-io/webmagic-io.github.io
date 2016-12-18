@@ -42,7 +42,9 @@ public class GithubRepoPageProcessor implements PageProcessor {
 
 ## 下载：
 
-添加Maven依赖：
+最新版：[WebMagic-0.6.0](https://github.com/code4craft/webmagic/releases/tag/WebMagic-0.6.0)
+
+Maven依赖：
 
 ```xml
 <dependency>
@@ -56,8 +58,6 @@ public class GithubRepoPageProcessor implements PageProcessor {
     <version>0.6.0</version>
 </dependency>
 ```
-
-或者下载最新版：
 
 ## 文档：
 
