@@ -1,0 +1,8 @@
+title: WebMagic
+description: 简单灵活的爬虫框架。
+google_analytics: UA-49956730-1
+show_downloads: true
+theme: jekyll-theme-cayman
+
+gems:
+  - jekyll-mentions
