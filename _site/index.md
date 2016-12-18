@@ -1,6 +1,8 @@
 
 ![](/images/logo.jpeg)
 
+[English](/en/)
+
 WebMagic是一个简单灵活的Java爬虫框架。基于WebMagic，你可以快速开发出一个高效、易维护的爬虫。
 
 ## 特性：
