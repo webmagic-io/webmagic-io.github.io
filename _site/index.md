@@ -1,5 +1,5 @@
-WebMagic
-=====================
+
+![](/images/logo.jpeg)
 
 WebMagic是一个简单灵活的爬虫框架。基于WebMagic，你可以快速开发出一个高效、易维护的爬虫。
 
