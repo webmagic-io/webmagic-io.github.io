@@ -44,7 +44,7 @@ public class GithubRepoPageProcessor implements PageProcessor {
 
 ## 下载：
 
-最新版：[WebMagic-0.6.0](https://github.com/code4craft/webmagic/releases/tag/WebMagic-0.6.0)
+最新版：[WebMagic-0.6.1](https://github.com/code4craft/webmagic/releases/tag/webmagic-parent-0.6.1)
 
 Maven依赖：
 
@@ -52,12 +52,12 @@ Maven依赖：
 <dependency>
     <groupId>us.codecraft</groupId>
     <artifactId>webmagic-core</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.1</version>
 </dependency>
 <dependency>
     <groupId>us.codecraft</groupId>
     <artifactId>webmagic-extension</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.1</version>
 </dependency>
 ```
 
