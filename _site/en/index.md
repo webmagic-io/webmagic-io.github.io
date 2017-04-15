@@ -44,7 +44,7 @@ public class GithubRepoPageProcessor implements PageProcessor {
 
 ## Download：
 
-Lastest Version：[WebMagic-0.6.0](https://github.com/code4craft/webmagic/releases/tag/WebMagic-0.6.0)
+Lastest Version：[WebMagic-0.6.1](https://github.com/code4craft/webmagic/releases/tag/webmagic-parent-0.6.1)
 
 Maven：
 
@@ -52,18 +52,19 @@ Maven：
 <dependency>
     <groupId>us.codecraft</groupId>
     <artifactId>webmagic-core</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.1</version>
 </dependency>
 <dependency>
     <groupId>us.codecraft</groupId>
     <artifactId>webmagic-extension</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.1</version>
 </dependency>
 ```
 
 ## Document：
 
 * English: [http://webmagic.io/docs/en](http://webmagic.io/docs/en)
+* Javadocs: [http://webmagic.io/apidocs/](http://webmagic.io/apidocs/)
 
 ## SourceCode：
 

@@ -65,6 +65,7 @@ Maven依赖：
 
 * 中文: [http://webmagic.io/docs/zh/](http://webmagic.io/docs/zh/)
 * English: [http://webmagic.io/docs/en](http://webmagic.io/docs/en)
+* Javadocs: [http://webmagic.io/apidocs/](http://webmagic.io/apidocs/)
 
 ## 源码：
 
