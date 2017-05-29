@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <title>WebMagic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/assets/css/style.css?v=18e7ae29e09d09c11b595de2731b98320ba0d956">
+  </head>
+  <body>
+    <!--<section class="page-header">-->
+      <!--<h1 class="project-name">WebMagic</h1>-->
+      <!--<h2 class="project-tagline">简单灵活的Java爬虫框架。</h2>-->
+      <!---->
+        <!--<a href="http://github.com/webmagic-io/webmagic-io.github.io" class="btn">View on GitHub</a>-->
+      <!---->
+      <!---->
+    <!--</section>-->
+
+    <section class="main-content">
+      
+<p><img src="/images/logo.jpeg" alt=""></p>
+
+<p><a href="/en/">English</a></p>
+
+<p>WebMagic是一个简单灵活的Java爬虫框架。基于WebMagic，你可以快速开发出一个高效、易维护的爬虫。</p>
+
+<h2 id="特性">特性：</h2>
+
+<ul>
+  <li>简单的API，可快速上手</li>
+  <li>模块化的结构，可轻松扩展</li>
+  <li>提供多线程和分布式支持</li>
+</ul>
+
+<p>一个示例：</p>
+
+<div class="language-java highlighter-rouge">
+<pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">GithubRepoPageProcessor</span> <span class="kd">implements</span> <span class="n">PageProcessor</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">Site</span> <span class="n">site</span> <span class="o">=</span> <span class="n">Site</span><span class="o">.</span><span class="na">me</span><span class="o">().</span><span class="na">setRetryTimes</span><span class="o">(</span><span class="mi">3</span><span class="o">).</span><span class="na">setSleepTime</span><span class="o">(</span><span class="mi">1000</span><span class="o">).</span><span class="na">setTimeOut</span><span class="o">(</span><span class="mi">10000</span><span class="o">);</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">process</span><span class="o">(</span><span class="n">Page</span> <span class="n">page</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">page</span><span class="o">.</span><span class="na">addTargetRequests</span><span class="o">(</span><span class="n">page</span><span class="o">.</span><span class="na">getHtml</span><span class="o">().</span><span class="na">links</span><span class="o">().</span><span class="na">regex</span><span class="o">(</span><span class="s">"(https://github\\.com/[\\w\\-]+/[\\w\\-]+)"</span><span class="o">).</span><span class="na">all</span><span class="o">());</span>
+        <span class="n">page</span><span class="o">.</span><span class="na">addTargetRequests</span><span class="o">(</span><span class="n">page</span><span class="o">.</span><span class="na">getHtml</span><span class="o">().</span><span class="na">links</span><span class="o">().</span><span class="na">regex</span><span class="o">(</span><span class="s">"(https://github\\.com/[\\w\\-])"</span><span class="o">).</span><span class="na">all</span><span class="o">());</span>
+        <span class="n">page</span><span class="o">.</span><span class="na">putField</span><span class="o">(</span><span class="s">"author"</span><span class="o">,</span> <span class="n">page</span><span class="o">.</span><span class="na">getUrl</span><span class="o">().</span><span class="na">regex</span><span class="o">(</span><span class="s">"https://github\\.com/(\\w+)/.*"</span><span class="o">).</span><span class="na">toString</span><span class="o">());</span>
+        <span class="n">page</span><span class="o">.</span><span class="na">putField</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span> <span class="n">page</span><span class="o">.</span><span class="na">getHtml</span><span class="o">().</span><span class="na">xpath</span><span class="o">(</span><span class="s">"//h1[@class='entry-title public']/strong/a/text()"</span><span class="o">).</span><span class="na">toString</span><span class="o">());</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">page</span><span class="o">.</span><span class="na">getResultItems</span><span class="o">().</span><span class="na">get</span><span class="o">(</span><span class="s">"name"</span><span class="o">)==</span><span class="kc">null</span><span class="o">){</span>
+            <span class="c1">//skip this page</span>
+            <span class="n">page</span><span class="o">.</span><span class="na">setSkip</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">page</span><span class="o">.</span><span class="na">putField</span><span class="o">(</span><span class="s">"readme"</span><span class="o">,</span> <span class="n">page</span><span class="o">.</span><span class="na">getHtml</span><span class="o">().</span><span class="na">xpath</span><span class="o">(</span><span class="s">"//div[@id='readme']/tidyText()"</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Site</span> <span class="nf">getSite</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">site</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Spider</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="k">new</span> <span class="n">GithubRepoPageProcessor</span><span class="o">()).</span><span class="na">addUrl</span><span class="o">(</span><span class="s">"https://github.com/code4craft"</span><span class="o">).</span><span class="na">thread</span><span class="o">(</span><span class="mi">5</span><span class="o">).</span><span class="na">run</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<h2 id="下载">下载：</h2>
+
+<p>最新版：<a href="https://github.com/code4craft/webmagic/releases/tag/webmagic-parent-0.6.1">WebMagic-0.6.1</a></p>
+
+<p>Maven依赖：</p>
+
+<div class="language-xml highlighter-rouge">
+<pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>us.codecraft<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>webmagic-core<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>0.6.1<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>us.codecraft<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>webmagic-extension<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>0.6.1<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre>
+</div>
+
+<h2 id="文档">文档：</h2>
+
+<ul>
+  <li>中文: <a href="http://webmagic.io/docs/zh/">http://webmagic.io/docs/zh/</a>
+</li>
+  <li>English: <a href="http://webmagic.io/docs/en">http://webmagic.io/docs/en</a>
+</li>
+  <li>Javadocs: <a href="http://webmagic.io/apidocs/">http://webmagic.io/apidocs/</a>
+</li>
+</ul>
+
+<h2 id="源码">源码：</h2>
+
+<ul>
+  <li><a href="https://git.oschina.net/flashsword20/webmagic">https://git.oschina.net/flashsword20/webmagic</a></li>
+  <li><a href="https://github.com/code4craft/webmagic">https://github.com/code4craft/webmagic</a></li>
+</ul>
+
+<h2 id="讨论">讨论：</h2>
+
+<ul>
+  <li>bug反馈及建议：<a href="https://github.com/code4craft/webmagic/issues">https://github.com/code4craft/webmagic/issues</a>
+</li>
+  <li>qq群：373225642</li>
+</ul>
+
+<h2 id="支持我们">支持我们</h2>
+
+<ul>
+  <li>如果你已经使用过WebMagic，欢迎参加<a href="https://jinshuju.net/f/d5CNTi">用户调查</a>。</li>
+</ul>
+
+
+      <footer class="site-footer">
+        
+          <span class="site-footer-owner"><a href="http://github.com/webmagic-io/webmagic-io.github.io">webmagic-io.github.io</a> is maintained by <a href="http://github.com/webmagic-io">webmagic-io</a>.</span>
+        
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</span>
+      </footer>
+    </section>
+
+    
+      <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+      </script>
+      <script type="text/javascript">
+        try {
+          var pageTracker = _gat._getTracker("UA-49956730-1");
+        pageTracker._trackPageview();
+        } catch(err) {}
+      </script>
+    
+  </body>
+</html>
