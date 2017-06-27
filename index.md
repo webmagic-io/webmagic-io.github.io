@@ -76,7 +76,7 @@ Maven依赖：
 ## 讨论：
 
 * bug反馈及建议：[https://github.com/code4craft/webmagic/issues](https://github.com/code4craft/webmagic/issues)
-* qq群：373225642
+* qq群：373225642(已满) 542327088
 
 ## 支持我们
 
