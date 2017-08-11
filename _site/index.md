@@ -81,4 +81,4 @@ Maven依赖：
 ## 支持我们
 
 * 如果你已经使用过WebMagic，欢迎参加[用户调查](https://jinshuju.net/f/d5CNTi)。
-* 作者公司正在招人，如果有兴趣可以查看JD并联系我。[票牛网-3到5年Java工程师](https://www.lagou.com/jobs/3306865.html)
+* 作者公司正在招人，如果有兴趣可以查看JD并联系我。[票牛网-3到5年Java工程师](https://my.oschina.net/X9UvbYkw/blog/1505314)
