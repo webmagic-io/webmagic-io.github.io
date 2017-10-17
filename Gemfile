@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 require 'json'
 require 'open-uri'
+require 'rake'
 
 versions = JSON.parse(open('https://pages.github.com/versions.json').read)
 
