@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebMagic - 灵活的Java爬虫框架</title>
+    <meta name="description" content="WebMagic是一个简单灵活的Java爬虫框架，支持多线程、分布式爬虫，提供简洁的API和强大的扩展能力">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="i18n.js"></script>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <div class="logo-container">
+                        <img src="logo.jpeg" alt="WebMagic Logo" class="logo-icon"/>
+                    </div>
+                    <span class="version">v1.0.3</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#features" class="nav-link" data-i18n="nav.features">特性</a>
+                    <a href="#quickstart" class="nav-link" data-i18n="nav.quickstart">快速开始</a>
+                    <a href="#docs" class="nav-link" data-i18n="nav.docs">文档</a>
+                    <a href="https://github.com/code4craft/webmagic" class="nav-link" target="_blank" data-i18n="nav.github">GitHub</a>
+                    <button class="lang-toggle" onclick="toggleLanguage()">EN</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title" data-i18n="hero.title">灵活的Java爬虫框架</h1>
+                    <p class="hero-subtitle" data-i18n="hero.subtitle">WebMagic是一个简单灵活的爬虫框架，涵盖爬虫的整个生命周期：下载、URL管理、内容提取和持久化</p>
+                    <div class="hero-buttons">
+                        <a href="#quickstart" class="btn btn-primary" data-i18n="hero.quickstart">快速开始</a>
+                        <a href="https://github.com/code4craft/webmagic" class="btn btn-secondary" target="_blank" data-i18n="hero.viewSource">查看源码</a>
+                    </div>
+                </div>
+                <div class="hero-code">
+                    <pre><code><span class="class-name">Spider</span><span class="punctuation">.</span><span class="method">create</span><span class="punctuation">(</span><span class="keyword">new</span> <span class="class-name">GithubRepoPageProcessor</span><span class="punctuation">()</span><span class="punctuation">)</span>
+    <span class="punctuation">.</span><span class="method">addUrl</span><span class="punctuation">(</span><span class="string">"https://github.com/code4craft"</span><span class="punctuation">)</span>
+    <span class="punctuation">.</span><span class="method">addPipeline</span><span class="punctuation">(</span><span class="keyword">new</span> <span class="class-name">ConsolePipeline</span><span class="punctuation">()</span><span class="punctuation">)</span>
+    <span class="punctuation">.</span><span class="method">run</span><span class="punctuation">()</span><span class="punctuation">;</span></code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="container">
+                <h2 class="section-title" data-i18n="features.title">核心特性</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🚀</div>
+                        <h3 data-i18n="features.simple.title">简单易用</h3>
+                        <p data-i18n="features.simple.desc">提供简洁的API，快速上手，几行代码即可构建强大的爬虫程序</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔧</div>
+                        <h3 data-i18n="features.flexible.title">高度灵活</h3>
+                        <p data-i18n="features.flexible.desc">模块化设计，易于扩展，支持自定义下载器、处理器和管道</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3 data-i18n="features.multithread.title">多线程支持</h3>
+                        <p data-i18n="features.multithread.desc">内置多线程支持，提高爬取效率，支持分布式部署</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3 data-i18n="features.annotation.title">注解驱动</h3>
+                        <p data-i18n="features.annotation.desc">支持注解方式配置POJO爬虫，让代码更加简洁优雅</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <h3 data-i18n="features.extraction.title">强大提取</h3>
+                        <p data-i18n="features.extraction.desc">支持XPath、CSS选择器、正则表达式等多种内容提取方式</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔌</div>
+                        <h3 data-i18n="features.integration.title">易于集成</h3>
+                        <p data-i18n="features.integration.desc">支持Spring集成，提供多种数据持久化方案</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="quickstart" class="quickstart">
+            <div class="container">
+                <div class="quickstart-content">
+                    <div class="quickstart-text">
+                        <h2 class="section-title" data-i18n="quickstart.title">快速开始</h2>
+                        <h3 data-i18n="quickstart.step1">1. 添加Maven依赖</h3>
+                        <div class="code-block">
+                            <pre><code><span class="xml-tag">&lt;dependency&gt;</span>
+    <span class="xml-tag">&lt;groupId&gt;</span><span class="xml-value">us.codecraft</span><span class="xml-tag">&lt;/groupId&gt;</span>
+    <span class="xml-tag">&lt;artifactId&gt;</span><span class="xml-value">webmagic-core</span><span class="xml-tag">&lt;/artifactId&gt;</span>
+    <span class="xml-tag">&lt;version&gt;</span><span class="xml-value">1.0.3</span><span class="xml-tag">&lt;/version&gt;</span>
+<span class="xml-tag">&lt;/dependency&gt;</span>
+<span class="xml-tag">&lt;dependency&gt;</span>
+    <span class="xml-tag">&lt;groupId&gt;</span><span class="xml-value">us.codecraft</span><span class="xml-tag">&lt;/groupId&gt;</span>
+    <span class="xml-tag">&lt;artifactId&gt;</span><span class="xml-value">webmagic-extension</span><span class="xml-tag">&lt;/artifactId&gt;</span>
+    <span class="xml-tag">&lt;version&gt;</span><span class="xml-value">1.0.3</span><span class="xml-tag">&lt;/version&gt;</span>
+<span class="xml-tag">&lt;/dependency&gt;</span></code></pre>
+                        </div>
+                        
+                        <h3 data-i18n="quickstart.step2">2. 编写PageProcessor</h3>
+                        <div class="code-block">
+                            <pre><code><span class="keyword">public</span> <span class="keyword">class</span> <span class="class-name">GithubRepoPageProcessor</span> <span class="keyword">implements</span> <span class="class-name">PageProcessor</span> <span class="punctuation">{</span>
+    <span class="keyword">private</span> <span class="type">Site</span> site <span class="operator">=</span> <span class="class-name">Site</span><span class="punctuation">.</span><span class="method">me</span><span class="punctuation">()</span><span class="punctuation">.</span><span class="method">setRetryTimes</span><span class="punctuation">(</span><span class="number">3</span><span class="punctuation">)</span><span class="punctuation">.</span><span class="method">setSleepTime</span><span class="punctuation">(</span><span class="number">100</span><span class="punctuation">)</span><span class="punctuation">;</span>
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="method">process</span><span class="punctuation">(</span><span class="type">Page</span> page<span class="punctuation">)</span> <span class="punctuation">{</span>
+        page<span class="punctuation">.</span><span class="method">addTargetRequests</span><span class="punctuation">(</span>page<span class="punctuation">.</span><span class="method">getHtml</span><span class="punctuation">()</span><span class="punctuation">.</span><span class="method">links</span><span class="punctuation">()</span>
+            <span class="punctuation">.</span><span class="method">regex</span><span class="punctuation">(</span><span class="string">"(https://github\\.com/\\w+/\\w+)"</span><span class="punctuation">)</span><span class="punctuation">.</span><span class="method">all</span><span class="punctuation">()</span><span class="punctuation">)</span><span class="punctuation">;</span>
+        page<span class="punctuation">.</span><span class="method">putField</span><span class="punctuation">(</span><span class="string">"author"</span><span class="punctuation">,</span> page<span class="punctuation">.</span><span class="method">getUrl</span><span class="punctuation">()</span>
+            <span class="punctuation">.</span><span class="method">regex</span><span class="punctuation">(</span><span class="string">"https://github\\.com/(\\w+)/.*"</span><span class="punctuation">)</span><span class="punctuation">.</span><span class="method">toString</span><span class="punctuation">()</span><span class="punctuation">)</span><span class="punctuation">;</span>
+        page<span class="punctuation">.</span><span class="method">putField</span><span class="punctuation">(</span><span class="string">"name"</span><span class="punctuation">,</span> page<span class="punctuation">.</span><span class="method">getHtml</span><span class="punctuation">()</span>
+            <span class="punctuation">.</span><span class="method">xpath</span><span class="punctuation">(</span><span class="string">"//h1[@class='public']/strong/a/text()"</span><span class="punctuation">)</span><span class="punctuation">.</span><span class="method">toString</span><span class="punctuation">()</span><span class="punctuation">)</span><span class="punctuation">;</span>
+    <span class="punctuation">}</span>
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="type">Site</span> <span class="method">getSite</span><span class="punctuation">()</span> <span class="punctuation">{</span>
+        <span class="keyword">return</span> site<span class="punctuation">;</span>
+    <span class="punctuation">}</span>
+<span class="punctuation">}</span></code></pre>
+                        </div>
+
+                        <h3 data-i18n="quickstart.step3">3. 启动爬虫</h3>
+                        <div class="code-block">
+                            <pre><code><span class="class-name">Spider</span><span class="punctuation">.</span><span class="method">create</span><span class="punctuation">(</span><span class="keyword">new</span> <span class="class-name">GithubRepoPageProcessor</span><span class="punctuation">()</span><span class="punctuation">)</span>
+    <span class="punctuation">.</span><span class="method">addUrl</span><span class="punctuation">(</span><span class="string">"https://github.com/code4craft"</span><span class="punctuation">)</span>
+    <span class="punctuation">.</span><span class="method">addPipeline</span><span class="punctuation">(</span><span class="keyword">new</span> <span class="class-name">ConsolePipeline</span><span class="punctuation">()</span><span class="punctuation">)</span>
+    <span class="punctuation">.</span><span class="method">thread</span><span class="punctuation">(</span><span class="number">5</span><span class="punctuation">)</span>
+    <span class="punctuation">.</span><span class="method">run</span><span class="punctuation">()</span><span class="punctuation">;</span></code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="docs" class="docs">
+            <div class="container">
+                <h2 class="section-title" data-i18n="docs.title">文档与资源</h2>
+                <div class="docs-grid">
+                    <div class="doc-card">
+                        <h3 data-i18n="docs.chineseDocs.title">📚 中文文档</h3>
+                        <p data-i18n="docs.chineseDocs.desc">完整的中文使用指南和API文档</p>
+                        <a href="http://webmagic.io/docs/zh/" class="doc-link" target="_blank" data-i18n="docs.chineseDocs.link">查看文档</a>
+                    </div>
+                    <div class="doc-card">
+                        <h3 data-i18n="docs.englishDocs.title">📖 English Docs</h3>
+                        <p data-i18n="docs.englishDocs.desc">Complete English documentation and guides</p>
+                        <a href="http://webmagic.io/docs/en/" class="doc-link" target="_blank" data-i18n="docs.englishDocs.link">View Docs</a>
+                    </div>
+                    <div class="doc-card">
+                        <h3 data-i18n="docs.javadoc.title">🔍 JavaDoc</h3>
+                        <p data-i18n="docs.javadoc.desc">详细的API参考文档</p>
+                        <a href="http://webmagic.io/apidocs/" class="doc-link" target="_blank" data-i18n="docs.javadoc.link">API文档</a>
+                    </div>
+                    <div class="doc-card">
+                        <h3 data-i18n="docs.community.title">💬 社区支持</h3>
+                        <p data-i18n="docs.community.desc">GitHub Issues 和 QQ群讨论</p>
+                        <a href="https://github.com/code4craft/webmagic/issues" class="doc-link" target="_blank" data-i18n="docs.community.link">提交问题</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <h3>WebMagic</h3>
+                    <p data-i18n="footer.description">开源的Java爬虫框架</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4 data-i18n="footer.project">项目</h4>
+                        <a href="https://github.com/code4craft/webmagic" data-i18n="footer.github">GitHub</a>
+                        <a href="https://git.oschina.net/flashsword20/webmagic">OSChina</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4 data-i18n="footer.documentation">文档</h4>
+                        <a href="http://webmagic.io/docs/zh/" data-i18n="footer.chineseDocs">中文文档</a>
+                        <a href="http://webmagic.io/docs/en/" data-i18n="footer.english">English</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4 data-i18n="footer.community">社区</h4>
+                        <a href="https://github.com/code4craft/webmagic/issues" data-i18n="footer.issues">Issues</a>
+                        <a href="#" data-i18n="footer.qqGroup">QQ群</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p data-i18n="footer.copyright">&copy; 2024 WebMagic. Licensed under Apache 2.0</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
