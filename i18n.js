@@ -42,7 +42,7 @@ const translations = {
             },
             integration: {
                 title: "易于集成",
-                desc: "支持Spring集成，提供多种数据持久化方案"
+                desc: "提供多种数据持久化方案"
             }
         },
         
@@ -136,7 +136,7 @@ const translations = {
             },
             integration: {
                 title: "Easy Integration",
-                desc: "Spring integration support with multiple data persistence solutions"
+                desc: "multiple data persistence solutions"
             }
         },
         
