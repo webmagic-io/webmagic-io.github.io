@@ -1,214 +1,1444 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebMagic - 灵活的Java爬虫框架</title>
-    <meta name="description" content="WebMagic是一个简单灵活的Java爬虫框架，支持多线程、分布式爬虫，提供简洁的API和强大的扩展能力">
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="i18n.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebMagic · 抓取即魔法</title>
+  <meta
+    name="description"
+    content="WebMagic 是一个灵活、可扩展的 Java 爬虫框架，覆盖下载、URL 管理、内容抽取与持久化的完整生命周期。"
+  >
+  <link rel="icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"
+    rel="stylesheet"
+  >
+  <style>
+    :root {
+      --bg: #0a0d08;
+      --bg-soft: #0d120b;
+      --panel: rgba(9, 13, 9, 0.92);
+      --panel-2: #0f140d;
+      --line: #1d261b;
+      --line-strong: #2e392a;
+      --text: #e4eed8;
+      --muted: #95a489;
+      --dim: #63705d;
+      --accent: #7fd858;
+      --accent-soft: rgba(127, 216, 88, 0.11);
+      --accent-strong: #96ef6c;
+      --warn: #f5b94a;
+      --cyan: #72d4c2;
+      --red: #ef6a5f;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.42);
+      --container: min(1240px, calc(100vw - 40px));
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top center, rgba(127, 216, 88, 0.12), transparent 32%),
+        linear-gradient(180deg, #0b0f09 0%, #090c08 100%);
+      font-family: "IBM Plex Mono", monospace;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(30, 40, 27, 0.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(30, 40, 27, 0.22) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: radial-gradient(circle at top center, black 24%, transparent 78%);
+      opacity: 0.42;
+      z-index: -2;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(127, 216, 88, 0.03) 0,
+        rgba(127, 216, 88, 0.03) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      mix-blend-mode: screen;
+      z-index: -1;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .container {
+      width: var(--container);
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(14px);
+      background: rgba(9, 13, 9, 0.7);
+      border-bottom: 1px solid rgba(46, 57, 42, 0.7);
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .site-header.is-scrolled {
+      background: rgba(7, 10, 7, 0.92);
+      border-color: rgba(127, 216, 88, 0.18);
+    }
+
+    .nav-shell {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      min-height: 76px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border: 1.5px solid var(--accent);
+      border-radius: 3px;
+      color: var(--accent);
+      font-weight: 700;
+      box-shadow: 0 0 14px rgba(127, 216, 88, 0.2);
+    }
+
+    .brand-name {
+      font-family: "Space Grotesk", "Noto Sans SC", sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-version {
+      padding: 2px 8px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      color: var(--dim);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-left: 28px;
+    }
+
+    .nav-link {
+      color: var(--muted);
+      font-size: 0.83rem;
+      letter-spacing: 0.02em;
+      transition: color 0.2s ease;
+    }
+
+    .nav-link:hover,
+    .nav-link.is-active {
+      color: var(--text);
+    }
+
+    .nav-actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-search {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 250px;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      color: var(--dim);
+      background: rgba(6, 9, 6, 0.82);
+      font-size: 0.76rem;
+    }
+
+    .nav-search kbd {
+      margin-left: auto;
+      padding: 1px 6px;
+      border: 1px solid var(--line-strong);
+      border-radius: 3px;
+      color: var(--muted);
+      font-size: 0.64rem;
+    }
+
+    .lang-toggle,
+    .ghost-button,
+    .cta-button,
+    .copy-button,
+    .quickstart-nav button,
+    .mobile-toggle {
+      border: 0;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .lang-toggle,
+    .ghost-button {
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+    }
+
+    .lang-toggle:hover,
+    .ghost-button:hover {
+      border-color: var(--accent);
+      color: var(--text);
+      background: rgba(127, 216, 88, 0.05);
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 46px;
+      padding: 0 22px;
+      border-radius: 4px;
+      background: var(--accent);
+      color: #081008;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      box-shadow: 0 16px 40px rgba(127, 216, 88, 0.12);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 22px 50px rgba(127, 216, 88, 0.16);
+    }
+
+    .mobile-toggle {
+      display: none;
+      margin-left: auto;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .mobile-toggle span {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      height: 1px;
+      background: var(--text);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .mobile-toggle span:nth-child(1) { top: 14px; }
+    .mobile-toggle span:nth-child(2) { top: 21px; }
+    .mobile-toggle span:nth-child(3) { top: 28px; }
+
+    .mobile-toggle.is-open span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .mobile-toggle.is-open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .mobile-toggle.is-open span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    main {
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 88px 0 72px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(440px, 1fr);
+      gap: 64px;
+      align-items: start;
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px 12px;
+      margin-bottom: 34px;
+      color: var(--dim);
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .hero-meta .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(127, 216, 88, 0.5);
+    }
+
+    .hero-title {
+      margin: 0;
+      font-family: "Space Grotesk", "Noto Sans SC", sans-serif;
+      font-size: clamp(3.4rem, 9vw, 6.2rem);
+      line-height: 0.9;
+      letter-spacing: -0.06em;
+    }
+
+    .hero-title .accent {
+      color: var(--accent);
+    }
+
+    .hero-caret {
+      display: inline-block;
+      color: var(--accent);
+      animation: blink 1s steps(2) infinite;
+    }
+
+    .hero-lead,
+    .body-copy,
+    .resource-card p,
+    .feature-card p,
+    .footer-copy,
+    .code-note {
+      font-family: "Noto Sans SC", sans-serif;
+    }
+
+    .hero-lead {
+      max-width: 590px;
+      margin: 28px 0 0;
+      color: var(--muted);
+      font-size: 1.06rem;
+      line-height: 1.86;
+    }
+
+    .hero-lead strong {
+      color: var(--text);
+      background: var(--accent-soft);
+      padding: 0 4px;
+      font-weight: 700;
+    }
+
+    .command-bar {
+      display: flex;
+      align-items: stretch;
+      margin-top: 38px;
+      max-width: 680px;
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      overflow: hidden;
+      background: #060907;
+      box-shadow: var(--shadow);
+    }
+
+    .command-prefix {
+      padding: 14px 16px;
+      color: var(--accent);
+      border-right: 1px solid var(--line);
+      font-weight: 700;
+    }
+
+    .command-text {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 14px 16px;
+      min-height: 54px;
+      color: var(--text);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: 0.84rem;
+    }
+
+    .copy-button {
+      padding: 0 18px;
+      border-left: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .copy-button:hover {
+      background: rgba(127, 216, 88, 0.06);
+      color: var(--text);
+    }
+
+    .copy-button.is-copied {
+      color: #081008;
+      background: var(--accent);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 28px;
+      margin-top: 68px;
+      padding-top: 28px;
+      border-top: 1px dashed var(--line-strong);
+    }
+
+    .stat-value {
+      font-size: 1.7rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+
+    .stat-label {
+      margin-top: 8px;
+      color: var(--dim);
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .terminal-window,
+    .panel,
+    .resource-grid,
+    .feature-grid,
+    .quickstart-panel {
+      box-shadow: var(--shadow);
+    }
+
+    .terminal-window {
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      background: #050806;
+    }
+
+    .window-topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #080c08;
+      color: var(--dim);
+      font-size: 0.72rem;
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .window-dots span {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+
+    .window-dots span:nth-child(1) { background: #ff5f57; }
+    .window-dots span:nth-child(2) { background: #febc2e; }
+    .window-dots span:nth-child(3) { background: #28c840; }
+
+    .window-tag {
+      margin-left: auto;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .window-body {
+      padding: 24px 22px 18px;
+    }
+
+    .ascii-box {
+      min-height: 360px;
+      overflow: auto;
+    }
+
+    .ascii-box pre,
+    .pipeline pre,
+    .code-view pre {
+      margin: 0;
+      white-space: pre;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.82rem;
+    }
+
+    .accent-text { color: var(--accent); }
+    .warn-text { color: var(--warn); }
+    .cyan-text { color: var(--cyan); }
+    .red-text { color: var(--red); }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      padding: 12px 20px;
+      border-top: 1px solid var(--line);
+      color: var(--dim);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .legend .live {
+      color: var(--accent);
+    }
+
+    .section {
+      padding: 72px 0;
+      border-top: 1px solid rgba(29, 38, 27, 0.94);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 22px;
+      margin-bottom: 34px;
+    }
+
+    .section-no,
+    .eyebrow,
+    .resource-meta,
+    .footer-title {
+      color: var(--dim);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      margin: 0;
+      font-family: "Space Grotesk", "Noto Sans SC", sans-serif;
+      font-size: clamp(2rem, 4vw, 2.6rem);
+      letter-spacing: -0.04em;
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+      transform: translateY(-8px);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .feature-card {
+      position: relative;
+      padding: 30px 26px;
+      min-height: 240px;
+      border-right: 1px solid var(--line);
+      border-top: 1px solid var(--line);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .feature-card:nth-child(-n + 3) {
+      border-top: 0;
+    }
+
+    .feature-card:nth-child(3n) {
+      border-right: 0;
+    }
+
+    .feature-card:hover {
+      background: rgba(127, 216, 88, 0.04);
+      transform: translateY(-2px);
+    }
+
+    .feature-card.is-emphasis {
+      background: linear-gradient(180deg, rgba(127, 216, 88, 0.08), transparent 60%);
+    }
+
+    .feature-topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .feature-badge {
+      padding: 2px 7px;
+      border: 1px solid var(--line-strong);
+      color: var(--dim);
+      font-size: 0.64rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .feature-icon {
+      width: 36px;
+      height: 36px;
+      color: var(--accent);
+    }
+
+    .feature-card h3 {
+      margin: 22px 0 10px;
+      font-family: "Noto Sans SC", sans-serif;
+      font-size: 1.35rem;
+      letter-spacing: -0.03em;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.78;
+      font-size: 0.92rem;
+    }
+
+    .pipeline {
+      padding: 44px 36px;
+      border: 1px solid var(--line);
+      background: #060907;
+      overflow: auto;
+    }
+
+    .quickstart-panel {
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    .quickstart-nav {
+      background: #080b06;
+      border-right: 1px solid var(--line);
+    }
+
+    .quickstart-nav button {
+      display: block;
+      width: 100%;
+      padding: 20px 22px;
+      text-align: left;
+      color: var(--muted);
+      border-bottom: 1px solid var(--line);
+      border-left: 2px solid transparent;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .quickstart-nav button.is-active {
+      background: var(--bg);
+      color: var(--text);
+      border-left-color: var(--accent);
+    }
+
+    .quickstart-nav .step-sub {
+      display: block;
+      margin-top: 4px;
+      color: var(--dim);
+      font-size: 0.72rem;
+    }
+
+    .quickstart-body {
+      min-width: 0;
+      padding: 26px 30px 30px;
+      background: #060907;
+    }
+
+    .prompt-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0;
+      color: var(--text);
+      font-size: 0.84rem;
+    }
+
+    .prompt-line .host { color: var(--accent); }
+    .prompt-line .path { color: var(--cyan); }
+    .prompt-line .sep { color: var(--dim); }
+
+    .code-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 18px 0 12px;
+      color: var(--dim);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .code-view {
+      position: relative;
+      padding: 18px 18px 18px 0;
+      border: 1px solid var(--line);
+      background: #0a0f08;
+      overflow: auto;
+    }
+
+    .code-grid {
+      display: grid;
+      grid-template-columns: 56px minmax(0, 1fr);
+      gap: 0;
+    }
+
+    .line-numbers {
+      padding: 0 14px 0 0;
+      color: var(--dim);
+      text-align: right;
+      user-select: none;
+      white-space: pre;
+      line-height: 1.72;
+      font-size: 0.83rem;
+    }
+
+    .code-content {
+      min-width: 560px;
+      color: var(--text);
+      white-space: pre;
+      line-height: 1.72;
+      font-size: 0.83rem;
+    }
+
+    .quickstart-caption {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.76;
+    }
+
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border: 1px solid var(--line);
+    }
+
+    .resource-card {
+      display: block;
+      padding: 28px 24px;
+      min-height: 220px;
+      background: var(--panel);
+      border-right: 1px solid var(--line);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .resource-card:last-child {
+      border-right: 0;
+    }
+
+    .resource-card:hover {
+      background: rgba(127, 216, 88, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .resource-card h3 {
+      margin: 10px 0 8px;
+      font-family: "Noto Sans SC", sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .resource-card p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.76;
+      font-size: 0.92rem;
+    }
+
+    .footer {
+      margin-top: 56px;
+      padding: 54px 0 36px;
+      border-top: 1px solid var(--line);
+      background: #060907;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr 1fr 1fr;
+      gap: 42px;
+    }
+
+    .footer-copy {
+      max-width: 340px;
+      margin: 16px 0 0;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 0.92rem;
+    }
+
+    .footer-title {
+      margin-bottom: 14px;
+      color: var(--accent);
+    }
+
+    .footer-links {
+      display: grid;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
+    .footer-bottom {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(29, 38, 27, 0.86);
+      color: var(--dim);
+      font-size: 0.76rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    @media (max-width: 1080px) {
+      .nav-search {
+        display: none;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .feature-card:nth-child(3) {
+        border-right: 1px solid var(--line);
+      }
+
+      .feature-card:nth-child(2n) {
+        border-right: 0;
+      }
+
+      .feature-card:nth-child(-n + 2) {
+        border-top: 0;
+      }
+
+      .resource-grid,
+      .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .resource-card:nth-child(2n) {
+        border-right: 0;
+      }
+    }
+
+    @media (max-width: 840px) {
+      .nav-shell {
+        flex-wrap: wrap;
+        padding: 14px 0;
+      }
+
+      .mobile-toggle {
+        display: inline-grid;
+        place-items: center;
+      }
+
+      .nav-links,
+      .nav-actions {
+        width: 100%;
+        display: none;
+        margin: 0;
+      }
+
+      .nav-links.is-open,
+      .nav-actions.is-open {
+        display: flex;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 10px 0 4px;
+      }
+
+      .nav-actions {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        padding-bottom: 8px;
+      }
+
+      .stats-strip,
+      .resource-grid,
+      .footer-grid,
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-card,
+      .resource-card {
+        border-right: 0;
+      }
+
+      .feature-card:nth-child(n) {
+        border-top: 1px solid var(--line);
+      }
+
+      .feature-card:first-child {
+        border-top: 0;
+      }
+
+      .quickstart-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .quickstart-nav {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .quickstart-nav button {
+        border-left-width: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .quickstart-nav button.is-active {
+        border-left-width: 0;
+        box-shadow: inset 3px 0 0 var(--accent);
+      }
+    }
+
+    @media (max-width: 640px) {
+      :root {
+        --container: min(100vw - 24px, 1240px);
+      }
+
+      .hero {
+        padding-top: 58px;
+      }
+
+      .hero-title {
+        font-size: 3.1rem;
+      }
+
+      .section {
+        padding: 56px 0;
+      }
+
+      .section-header {
+        flex-wrap: wrap;
+        gap: 10px 14px;
+      }
+
+      .section-line {
+        display: none;
+      }
+
+      .window-body,
+      .quickstart-body,
+      .pipeline {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .command-bar {
+        flex-wrap: wrap;
+      }
+
+      .command-prefix {
+        width: 52px;
+      }
+
+      .command-text {
+        min-width: 0;
+      }
+
+      .copy-button {
+        width: 100%;
+        min-height: 44px;
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
+    }
+  </style>
 </head>
 <body>
-    <header class="header">
-        <nav class="nav">
-            <div class="nav-container">
-                <div class="nav-brand">
-                    <div class="logo-container">
-                        <img src="logo.jpeg" alt="WebMagic Logo" class="logo-icon"/>
-                    </div>
-                    <span class="version">v1.0.3</span>
-                </div>
-                <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                <div class="nav-links" id="navLinks">
-                    <a href="#features" class="nav-link" data-i18n="nav.features">特性</a>
-                    <a href="#quickstart" class="nav-link" data-i18n="nav.quickstart">快速开始</a>
-                    <a href="#docs" class="nav-link" data-i18n="nav.docs">文档</a>
-                    <a href="https://github.com/code4craft/webmagic" class="nav-link" target="_blank" data-i18n="nav.github">GitHub</a>
-                    <button class="lang-toggle" onclick="toggleLanguage()">EN</button>
-                </div>
-            </div>
-        </nav>
-    </header>
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-shell">
+      <a class="brand" href="#top" aria-label="WebMagic 首页">
+        <span class="brand-mark">W</span>
+        <span class="brand-name">WebMagic</span>
+        <span class="brand-version">v1.0.3</span>
+      </a>
 
-    <main>
-        <section class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h1 class="hero-title" data-i18n="hero.title">灵活的Java爬虫框架</h1>
-                    <p class="hero-subtitle" data-i18n="hero.subtitle">WebMagic是一个简单灵活的爬虫框架，涵盖爬虫的整个生命周期：下载、URL管理、内容提取和持久化</p>
-                    <div class="hero-buttons">
-                        <a href="#quickstart" class="btn btn-primary" data-i18n="hero.quickstart">快速开始</a>
-                        <a href="https://github.com/code4craft/webmagic" class="btn btn-secondary" target="_blank" data-i18n="hero.viewSource">查看源码</a>
-                    </div>
-                </div>
-                <div class="hero-code">
-                    <pre><code><span class="class-name">Spider</span><span class="punctuation">.</span><span class="method">create</span><span class="punctuation">(</span><span class="keyword">new</span> <span class="class-name">GithubRepoPageProcessor</span><span class="punctuation">()</span><span class="punctuation">)</span>
-    <span class="punctuation">.</span><span class="method">addUrl</span><span class="punctuation">(</span><span class="string">"https://github.com/code4craft"</span><span class="punctuation">)</span>
-    <span class="punctuation">.</span><span class="method">addPipeline</span><span class="punctuation">(</span><span class="keyword">new</span> <span class="class-name">ConsolePipeline</span><span class="punctuation">()</span><span class="punctuation">)</span>
-    <span class="punctuation">.</span><span class="method">run</span><span class="punctuation">()</span><span class="punctuation">;</span></code></pre>
-                </div>
-            </div>
-        </section>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="切换导航菜单" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
 
-        <section id="features" class="features">
-            <div class="container">
-                <h2 class="section-title" data-i18n="features.title">核心特性</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">🚀</div>
-                        <h3 data-i18n="features.simple.title">简单易用</h3>
-                        <p data-i18n="features.simple.desc">提供简洁的API，快速上手，几行代码即可构建强大的爬虫程序</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🔧</div>
-                        <h3 data-i18n="features.flexible.title">高度灵活</h3>
-                        <p data-i18n="features.flexible.desc">模块化设计，易于扩展，支持自定义下载器、处理器和管道</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">⚡</div>
-                        <h3 data-i18n="features.multithread.title">多线程支持</h3>
-                        <p data-i18n="features.multithread.desc">内置多线程支持，提高爬取效率，支持分布式部署</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🎯</div>
-                        <h3 data-i18n="features.annotation.title">注解驱动</h3>
-                        <p data-i18n="features.annotation.desc">支持注解方式配置POJO爬虫，让代码更加简洁优雅</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🔍</div>
-                        <h3 data-i18n="features.extraction.title">强大提取</h3>
-                        <p data-i18n="features.extraction.desc">支持XPath、CSS选择器、正则表达式等多种内容提取方式</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🔌</div>
-                        <h3 data-i18n="features.integration.title">易于集成</h3>
-                        <p data-i18n="features.integration.desc">提供多种数据持久化方案</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+      <nav class="nav-links" id="navLinks">
+        <a class="nav-link" href="#features" data-i18n="nav.features">特性</a>
+        <a class="nav-link" href="#architecture" data-i18n="nav.architecture">架构</a>
+        <a class="nav-link" href="#quickstart" data-i18n="nav.quickstart">快速开始</a>
+        <a class="nav-link" href="#resources" data-i18n="nav.resources">资源</a>
+        <a class="nav-link" href="apidocs/index.html" data-i18n="nav.api">API</a>
+        <a class="nav-link" href="https://github.com/code4craft/webmagic" target="_blank" rel="noreferrer" data-i18n="nav.github">GitHub</a>
+      </nav>
 
-        <section id="quickstart" class="quickstart">
-            <div class="container">
-                <div class="quickstart-content">
-                    <div class="quickstart-text">
-                        <h2 class="section-title" data-i18n="quickstart.title">快速开始</h2>
-                        <h3 data-i18n="quickstart.step1">1. 添加Maven依赖</h3>
-                        <div class="code-block">
-                            <pre><code><span class="xml-tag">&lt;dependency&gt;</span>
-    <span class="xml-tag">&lt;groupId&gt;</span><span class="xml-value">us.codecraft</span><span class="xml-tag">&lt;/groupId&gt;</span>
-    <span class="xml-tag">&lt;artifactId&gt;</span><span class="xml-value">webmagic-core</span><span class="xml-tag">&lt;/artifactId&gt;</span>
-    <span class="xml-tag">&lt;version&gt;</span><span class="xml-value">1.0.3</span><span class="xml-tag">&lt;/version&gt;</span>
-<span class="xml-tag">&lt;/dependency&gt;</span>
-<span class="xml-tag">&lt;dependency&gt;</span>
-    <span class="xml-tag">&lt;groupId&gt;</span><span class="xml-value">us.codecraft</span><span class="xml-tag">&lt;/groupId&gt;</span>
-    <span class="xml-tag">&lt;artifactId&gt;</span><span class="xml-value">webmagic-extension</span><span class="xml-tag">&lt;/artifactId&gt;</span>
-    <span class="xml-tag">&lt;version&gt;</span><span class="xml-value">1.0.3</span><span class="xml-tag">&lt;/version&gt;</span>
-<span class="xml-tag">&lt;/dependency&gt;</span></code></pre>
-                        </div>
-                        
-                        <h3 data-i18n="quickstart.step2">2. 编写PageProcessor</h3>
-                        <div class="code-block">
-                            <pre><code><span class="keyword">public</span> <span class="keyword">class</span> <span class="class-name">GithubRepoPageProcessor</span> <span class="keyword">implements</span> <span class="class-name">PageProcessor</span> <span class="punctuation">{</span>
-    <span class="keyword">private</span> <span class="type">Site</span> site <span class="operator">=</span> <span class="class-name">Site</span><span class="punctuation">.</span><span class="method">me</span><span class="punctuation">()</span><span class="punctuation">.</span><span class="method">setRetryTimes</span><span class="punctuation">(</span><span class="number">3</span><span class="punctuation">)</span><span class="punctuation">.</span><span class="method">setSleepTime</span><span class="punctuation">(</span><span class="number">100</span><span class="punctuation">)</span><span class="punctuation">;</span>
-
-    <span class="annotation">@Override</span>
-    <span class="keyword">public</span> <span class="keyword">void</span> <span class="method">process</span><span class="punctuation">(</span><span class="type">Page</span> page<span class="punctuation">)</span> <span class="punctuation">{</span>
-        page<span class="punctuation">.</span><span class="method">addTargetRequests</span><span class="punctuation">(</span>page<span class="punctuation">.</span><span class="method">getHtml</span><span class="punctuation">()</span><span class="punctuation">.</span><span class="method">links</span><span class="punctuation">()</span>
-            <span class="punctuation">.</span><span class="method">regex</span><span class="punctuation">(</span><span class="string">"(https://github\\.com/\\w+/\\w+)"</span><span class="punctuation">)</span><span class="punctuation">.</span><span class="method">all</span><span class="punctuation">()</span><span class="punctuation">)</span><span class="punctuation">;</span>
-        page<span class="punctuation">.</span><span class="method">putField</span><span class="punctuation">(</span><span class="string">"author"</span><span class="punctuation">,</span> page<span class="punctuation">.</span><span class="method">getUrl</span><span class="punctuation">()</span>
-            <span class="punctuation">.</span><span class="method">regex</span><span class="punctuation">(</span><span class="string">"https://github\\.com/(\\w+)/.*"</span><span class="punctuation">)</span><span class="punctuation">.</span><span class="method">toString</span><span class="punctuation">()</span><span class="punctuation">)</span><span class="punctuation">;</span>
-        page<span class="punctuation">.</span><span class="method">putField</span><span class="punctuation">(</span><span class="string">"name"</span><span class="punctuation">,</span> page<span class="punctuation">.</span><span class="method">getHtml</span><span class="punctuation">()</span>
-            <span class="punctuation">.</span><span class="method">xpath</span><span class="punctuation">(</span><span class="string">"//h1[@class='public']/strong/a/text()"</span><span class="punctuation">)</span><span class="punctuation">.</span><span class="method">toString</span><span class="punctuation">()</span><span class="punctuation">)</span><span class="punctuation">;</span>
-    <span class="punctuation">}</span>
-
-    <span class="annotation">@Override</span>
-    <span class="keyword">public</span> <span class="type">Site</span> <span class="method">getSite</span><span class="punctuation">()</span> <span class="punctuation">{</span>
-        <span class="keyword">return</span> site<span class="punctuation">;</span>
-    <span class="punctuation">}</span>
-<span class="punctuation">}</span></code></pre>
-                        </div>
-
-                        <h3 data-i18n="quickstart.step3">3. 启动爬虫</h3>
-                        <div class="code-block">
-                            <pre><code><span class="class-name">Spider</span><span class="punctuation">.</span><span class="method">create</span><span class="punctuation">(</span><span class="keyword">new</span> <span class="class-name">GithubRepoPageProcessor</span><span class="punctuation">()</span><span class="punctuation">)</span>
-    <span class="punctuation">.</span><span class="method">addUrl</span><span class="punctuation">(</span><span class="string">"https://github.com/code4craft"</span><span class="punctuation">)</span>
-    <span class="punctuation">.</span><span class="method">addPipeline</span><span class="punctuation">(</span><span class="keyword">new</span> <span class="class-name">ConsolePipeline</span><span class="punctuation">()</span><span class="punctuation">)</span>
-    <span class="punctuation">.</span><span class="method">thread</span><span class="punctuation">(</span><span class="number">5</span><span class="punctuation">)</span>
-    <span class="punctuation">.</span><span class="method">run</span><span class="punctuation">()</span><span class="punctuation">;</span></code></pre>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="docs" class="docs">
-            <div class="container">
-                <h2 class="section-title" data-i18n="docs.title">文档与资源</h2>
-                <div class="docs-grid">
-                    <div class="doc-card">
-                        <h3 data-i18n="docs.chineseDocs.title">📚 中文文档</h3>
-                        <p data-i18n="docs.chineseDocs.desc">完整的中文使用指南和API文档</p>
-                        <a href="http://webmagic.io/docs/zh/" class="doc-link" target="_blank" data-i18n="docs.chineseDocs.link">查看文档</a>
-                    </div>
-                    <div class="doc-card">
-                        <h3 data-i18n="docs.englishDocs.title">📖 English Docs</h3>
-                        <p data-i18n="docs.englishDocs.desc">Complete English documentation and guides</p>
-                        <a href="http://webmagic.io/docs/en/" class="doc-link" target="_blank" data-i18n="docs.englishDocs.link">View Docs</a>
-                    </div>
-                    <div class="doc-card">
-                        <h3 data-i18n="docs.javadoc.title">🔍 JavaDoc</h3>
-                        <p data-i18n="docs.javadoc.desc">详细的API参考文档</p>
-                        <a href="http://webmagic.io/apidocs/" class="doc-link" target="_blank" data-i18n="docs.javadoc.link">API文档</a>
-                    </div>
-                    <div class="doc-card">
-                        <h3 data-i18n="docs.community.title">💬 社区支持</h3>
-                        <p data-i18n="docs.community.desc">GitHub Issues 和 QQ群讨论</p>
-                        <a href="https://github.com/code4craft/webmagic/issues" class="doc-link" target="_blank" data-i18n="docs.community.link">提交问题</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-info">
-                    <h3>WebMagic</h3>
-                    <p data-i18n="footer.description">开源的Java爬虫框架</p>
-                </div>
-                <div class="footer-links">
-                    <div class="footer-column">
-                        <h4 data-i18n="footer.project">项目</h4>
-                        <a href="https://github.com/code4craft/webmagic" data-i18n="footer.github">GitHub</a>
-                        <a href="https://git.oschina.net/flashsword20/webmagic">OSChina</a>
-                    </div>
-                    <div class="footer-column">
-                        <h4 data-i18n="footer.documentation">文档</h4>
-                        <a href="http://webmagic.io/docs/zh/" data-i18n="footer.chineseDocs">中文文档</a>
-                        <a href="http://webmagic.io/docs/en/" data-i18n="footer.english">English</a>
-                    </div>
-                    <div class="footer-column">
-                        <h4 data-i18n="footer.community">社区</h4>
-                        <a href="https://github.com/code4craft/webmagic/issues" data-i18n="footer.issues">Issues</a>
-                        <a href="#" data-i18n="footer.qqGroup">QQ群</a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p data-i18n="footer.copyright">&copy; 2024 WebMagic. Licensed under Apache 2.0</p>
-            </div>
+      <div class="nav-actions" id="navActions">
+        <div class="nav-search" aria-hidden="true">
+          <span>grep docs...</span>
+          <kbd>⌘K</kbd>
         </div>
-    </footer>
+        <button class="lang-toggle" id="langToggle" type="button">EN</button>
+        <a
+          class="cta-button"
+          href="https://github.com/code4craft/webmagic"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="查看 GitHub 仓库"
+        >
+          <span>★</span>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
 
-    <script src="script.js"></script>
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="hero-meta">
+            <span class="dot"></span>
+            <span data-i18n="hero.meta.status">Status · Operational</span>
+            <span>│</span>
+            <span data-i18n="hero.meta.build">Last build · stable</span>
+            <span>│</span>
+            <span>JDK 8+</span>
+          </div>
+
+          <h1 class="hero-title">
+            <span data-i18n="hero.titleLine1">抓取即</span><br>
+            <span class="accent" data-i18n="hero.titleLine2">魔法</span><span class="hero-caret">▮</span>
+          </h1>
+
+          <p class="hero-lead">
+            <span data-i18n="hero.descriptionPrefix">一个灵活、可扩展的 Java 爬虫框架。覆盖下载、URL 管理、内容抽取与持久化的完整生命周期，</span>
+            <strong data-i18n="hero.descriptionEmphasis">几行代码，一个爬虫。</strong>
+          </p>
+
+          <div class="command-bar">
+            <div class="command-prefix">$</div>
+            <div class="command-text" id="installCommand" data-command="mvn dependency:get -Dartifact=us.codecraft:webmagic-core:1.0.3">
+              <span id="typewriterText"></span><span class="hero-caret">▍</span>
+            </div>
+            <button class="copy-button" type="button" data-copy-target="installCommand" data-i18n="common.copy">Copy</button>
+          </div>
+
+          <div class="hero-actions">
+            <a class="cta-button" href="#quickstart" data-i18n="hero.primaryCta">快速开始</a>
+            <a class="ghost-button" href="https://github.com/code4craft/webmagic" target="_blank" rel="noreferrer" data-i18n="hero.secondaryCta">查看源码 ↗</a>
+          </div>
+
+          <div class="stats-strip reveal">
+            <div>
+              <div class="stat-value">11.4k+</div>
+              <div class="stat-label" data-i18n="stats.stars">Stars</div>
+            </div>
+            <div>
+              <div class="stat-value">2.8k+</div>
+              <div class="stat-label" data-i18n="stats.forks">Forks</div>
+            </div>
+            <div>
+              <div class="stat-value">347+</div>
+              <div class="stat-label" data-i18n="stats.contributors">Contributors</div>
+            </div>
+            <div>
+              <div class="stat-value">Apache 2.0</div>
+              <div class="stat-label" data-i18n="stats.license">License</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="terminal-window reveal">
+          <div class="window-topbar">
+            <div class="window-dots" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <span data-i18n="hero.windowTitle">crawl · live</span>
+            <span class="window-tag">NODES 8 · DEPTH 3 · <span class="accent-text">LIVE</span></span>
+          </div>
+          <div class="window-body ascii-box">
+            <pre aria-hidden="true">
+     <span class="accent-text">seed</span> ─────┐
+             │          <span class="accent-text">▓▓ crawler ▓▓</span>
+             ▼          ┌───────────────┐
+  github.com/code4craft │   queue url   │
+             │          └──────┬────────┘
+             │                 │
+             │       fetch     │   extract links
+             │                 ▼
+             │          ┌───────────────┐
+             │          │  html page    │
+             │          └──────┬────────┘
+             │                 │ xpath / css / regex
+             │                 ▼
+             │          ┌───────────────┐
+             │          │ result items  │───▶ console
+             │          └──────┬────────┘───▶ file
+             │                 └───────────▶ mysql / redis
+             ▼
+  enqueue next target urls ...
+
+  <span class="accent-text">[INFO]</span> Spider started with 5 threads
+  <span class="warn-text">[WARN]</span> follow link depth = 3
+  <span class="cyan-text">[DATA]</span> author=code4craft
+  <span class="accent-text">[DONE]</span> extracted 247 repositories
+            </pre>
+          </div>
+          <div class="legend">
+            <span class="live">◉ visited</span>
+            <span>○ queued</span>
+            <span>▓ crawler</span>
+            <span>FIG. 01 — spider traversal</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-no">§ 01</span>
+          <h2 class="section-title" data-i18n="features.title">核心特性</h2>
+          <span class="section-line"></span>
+          <span class="eyebrow">Features</span>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card is-emphasis reveal">
+            <div class="feature-topline">
+              <span class="section-no">§ 01</span>
+              <span class="feature-badge">Simple</span>
+            </div>
+            <svg class="feature-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+              <path d="M4 20h24M4 28h18M4 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+              <circle cx="30" cy="12" r="2.5" fill="currentColor"></circle>
+            </svg>
+            <h3 data-i18n="features.items.simple.title">简单易用</h3>
+            <p data-i18n="features.items.simple.desc">链式 API，十几行代码就能构建一个可工作的爬虫。</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <div class="feature-topline">
+              <span class="section-no">§ 02</span>
+              <span class="feature-badge">Composable</span>
+            </div>
+            <svg class="feature-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+              <rect x="4" y="4" width="10" height="10" stroke="currentColor" stroke-width="1.8"></rect>
+              <rect x="18" y="4" width="10" height="10" stroke="currentColor" stroke-width="1.8" stroke-dasharray="2 2"></rect>
+              <rect x="4" y="18" width="10" height="10" stroke="currentColor" stroke-width="1.8" stroke-dasharray="2 2"></rect>
+              <rect x="18" y="18" width="10" height="10" fill="currentColor" opacity="0.3"></rect>
+            </svg>
+            <h3 data-i18n="features.items.flexible.title">高度灵活</h3>
+            <p data-i18n="features.items.flexible.desc">四大组件彼此独立，任一层都可以替换、扩展与测试。</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <div class="feature-topline">
+              <span class="section-no">§ 03</span>
+              <span class="feature-badge">Scale</span>
+            </div>
+            <svg class="feature-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+              <path d="M6 6v20M14 10v16M22 6v20M30 10v16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+            </svg>
+            <h3 data-i18n="features.items.thread.title">多线程与分布式</h3>
+            <p data-i18n="features.items.thread.desc">内置线程池；切换 Redis Scheduler 即可扩展为分布式抓取。</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <div class="feature-topline">
+              <span class="section-no">§ 04</span>
+              <span class="feature-badge">POJO</span>
+            </div>
+            <svg class="feature-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+              <text x="2" y="22" fill="currentColor" font-size="22" font-family="IBM Plex Mono" font-weight="700">@</text>
+              <path d="M16 16h14M16 22h10" stroke="currentColor" stroke-width="1.8"></path>
+            </svg>
+            <h3 data-i18n="features.items.annotation.title">注解驱动</h3>
+            <p data-i18n="features.items.annotation.desc">@TargetUrl、@ExtractBy 让 POJO 既是模型也是爬虫描述。</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <div class="feature-topline">
+              <span class="section-no">§ 05</span>
+              <span class="feature-badge">Extract</span>
+            </div>
+            <svg class="feature-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+              <path d="M4 16l8-8 8 8-8 8z" stroke="currentColor" stroke-width="1.8"></path>
+              <circle cx="24" cy="24" r="5" stroke="currentColor" stroke-width="1.8"></circle>
+              <path d="M28 28l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+            </svg>
+            <h3 data-i18n="features.items.extract.title">强大提取</h3>
+            <p data-i18n="features.items.extract.desc">XPath、CSS、正则、JsonPath 可组合使用，适应复杂页面结构。</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <div class="feature-topline">
+              <span class="section-no">§ 06</span>
+              <span class="feature-badge">Pipe</span>
+            </div>
+            <svg class="feature-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+              <circle cx="8" cy="16" r="3.5" stroke="currentColor" stroke-width="1.8"></circle>
+              <circle cx="26" cy="8" r="3.5" stroke="currentColor" stroke-width="1.8"></circle>
+              <circle cx="26" cy="24" r="3.5" stroke="currentColor" stroke-width="1.8"></circle>
+              <path d="M12 16l10-6M12 16l10 6" stroke="currentColor" stroke-width="1.8"></path>
+            </svg>
+            <h3 data-i18n="features.items.integration.title">易于集成</h3>
+            <p data-i18n="features.items.integration.desc">结果可以流向 Console、文件、MySQL、Redis 或自定义 Pipeline。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="architecture">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-no">§ 02</span>
+          <h2 class="section-title" data-i18n="architecture.title">架构一览</h2>
+          <span class="section-line"></span>
+          <span class="eyebrow">Pipeline Overview</span>
+        </div>
+
+        <div class="pipeline reveal">
+          <pre aria-label="WebMagic 架构流程图">
+    ┌──────────┐       ┌────────────┐       ┌─────────────┐       ┌──────────┐
+    │  <span class="accent-text">SEEDS</span>   │──────▶│ <span class="accent-text">SCHEDULER</span>  │──────▶│ <span class="accent-text">DOWNLOADER</span>  │──────▶│  <span class="accent-text">PAGE</span>    │
+    │ urls[]   │       │ queue / dup│       │ http / proxy │       │ html dom │
+    └──────────┘       └──────┬─────┘       └──────┬──────┘       └────┬─────┘
+                              │                    │                    │
+                              │ push new urls      │ fetch response     │ parse
+                              ▼                    ▼                    ▼
+                        ┌────────────┐       ┌─────────────┐      ┌────────────┐
+                        │ <span class="warn-text">PROCESSOR</span>  │◀──────│ selectors   │─────▶│ result item │
+                        │ user logic │       │ css/xpath   │      │ fields     │
+                        └──────┬─────┘       └─────────────┘      └────┬───────┘
+                               │                                        │
+                               ▼                                        ▼
+                        ┌────────────┐       ┌─────────────┐      ┌────────────┐
+                        │  <span class="cyan-text">PIPELINE</span>  │──────▶│ file/mysql  │─────▶│    done    │
+                        │ custom out │       │ redis/kafka │      │ persisted  │
+                        └────────────┘       └─────────────┘      └────────────┘
+          </pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="quickstart">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-no">§ 03</span>
+          <h2 class="section-title" data-i18n="quickstart.title">快速开始</h2>
+          <span class="section-line"></span>
+          <span class="eyebrow">Quickstart</span>
+        </div>
+
+        <div class="quickstart-panel reveal">
+          <div class="quickstart-nav" id="quickstartNav" role="tablist" aria-label="快速开始步骤"></div>
+          <div class="quickstart-body">
+            <div class="prompt-line">
+              <span class="host">root@webmagic</span>
+              <span class="sep">:</span>
+              <span class="path" id="quickstartPath">~/webmagic-demo</span>
+              <span class="sep">$&nbsp;</span>
+              <span id="quickstartCommand">cat pom.xml</span>
+            </div>
+
+            <div class="code-toolbar">
+              <span id="quickstartMeta">pom.xml</span>
+              <button class="copy-button" type="button" data-copy-target="quickstartCode" data-i18n="common.copy">Copy</button>
+            </div>
+
+            <div class="code-view">
+              <div class="code-grid">
+                <pre class="line-numbers" id="quickstartLines"></pre>
+                <pre class="code-content" id="quickstartCode"></pre>
+              </div>
+            </div>
+
+            <p class="quickstart-caption" id="quickstartCaption"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="resources">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-no">§ 04</span>
+          <h2 class="section-title" data-i18n="resources.title">资源与生态</h2>
+          <span class="section-line"></span>
+          <span class="eyebrow">Docs · Community</span>
+        </div>
+
+        <div class="resource-grid">
+          <a class="resource-card reveal" href="archive/docs/0.6.1/zh/index.html">
+            <div class="resource-meta">→ /docs/zh</div>
+            <h3 data-i18n="resources.items.zh.title">中文文档</h3>
+            <p data-i18n="resources.items.zh.desc">完整的中文使用指南、概念说明与分章节教程。</p>
+            <div class="eyebrow" data-i18n="resources.items.zh.link">查看文档</div>
+          </a>
+
+          <a class="resource-card reveal" href="archive/docs/0.6.1/en/index.html">
+            <div class="resource-meta">→ /docs/en</div>
+            <h3 data-i18n="resources.items.en.title">English Docs</h3>
+            <p data-i18n="resources.items.en.desc">English reference for setup, concepts, annotations and examples.</p>
+            <div class="eyebrow" data-i18n="resources.items.en.link">View docs</div>
+          </a>
+
+          <a class="resource-card reveal" href="apidocs/index.html">
+            <div class="resource-meta">→ /apidocs</div>
+            <h3 data-i18n="resources.items.api.title">JavaDoc</h3>
+            <p data-i18n="resources.items.api.desc">按包、类与方法浏览 API 细节，适合查类型签名与扩展点。</p>
+            <div class="eyebrow" data-i18n="resources.items.api.link">打开 API</div>
+          </a>
+
+          <a class="resource-card reveal" href="https://github.com/code4craft/webmagic/issues" target="_blank" rel="noreferrer">
+            <div class="resource-meta">→ /community</div>
+            <h3 data-i18n="resources.items.community.title">社区支持</h3>
+            <p data-i18n="resources.items.community.desc">在 GitHub Issues 中反馈问题、讨论实现细节或参与贡献。</p>
+            <div class="eyebrow" data-i18n="resources.items.community.link">提交问题</div>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="brand">
+            <span class="brand-mark">W</span>
+            <span class="brand-name">WebMagic</span>
+          </div>
+          <p class="footer-copy" data-i18n="footer.copy">
+            一个安静运行了很多年的开源 Java 爬虫框架。灵活、易用、可扩展。
+          </p>
+        </div>
+
+        <div>
+          <div class="footer-title" data-i18n="footer.project">项目</div>
+          <div class="footer-links">
+            <a href="https://github.com/code4craft/webmagic" target="_blank" rel="noreferrer">GitHub</a>
+            <a href="https://git.oschina.net/flashsword20/webmagic" target="_blank" rel="noreferrer">OSChina</a>
+            <a href="https://github.com/code4craft/webmagic/releases" target="_blank" rel="noreferrer" data-i18n="footer.releases">Releases</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="footer-title" data-i18n="footer.docs">文档</div>
+          <div class="footer-links">
+            <a href="archive/docs/0.6.1/zh/index.html" data-i18n="footer.zh">中文文档</a>
+            <a href="archive/docs/0.6.1/en/index.html" data-i18n="footer.en">English</a>
+            <a href="apidocs/index.html">JavaDoc</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="footer-title" data-i18n="footer.community">社区</div>
+          <div class="footer-links">
+            <a href="https://github.com/code4craft/webmagic/issues" target="_blank" rel="noreferrer">Issues</a>
+            <a href="https://github.com/code4craft/webmagic" target="_blank" rel="noreferrer" data-i18n="footer.source">源码仓库</a>
+            <a href="https://github.com/code4craft/webmagic/blob/master/README.md" target="_blank" rel="noreferrer" data-i18n="footer.guide">贡献入口</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom" data-i18n="footer.bottom">© 2013–2024 WebMagic · Apache 2.0</div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
 </body>
 </html>
